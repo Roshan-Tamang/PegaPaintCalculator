@@ -1,17 +1,19 @@
 package org.softwareinstitute.rt.paintcalculator;
 
+
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Scanner;
 
 public class Calculator {
 
 
-    private int height;
-    private int width;
     private int totalAreaColour;
     double costPerL;
-    double totalCost;
+    BigDecimal totalCost;
+    int numberOfCoatings;
+
     Scanner sc = new Scanner(System.in);
 
 
@@ -19,72 +21,103 @@ public class Calculator {
 
         System.out.println("Welcome to the paint calculator");
 
-        selectColour();
+        do {
+            selectColour();
+            numberOfCoatings();
 
-        if(!(costPerL == 0.0)){
-            enterWallDimensions();
+            if (!(costPerL == 0.0)) {
+                enterWallDimensions();
 
-            calculateCost();
+                calculateCost();
 
-            System.out.println("Total cost: £"+totalCost);
-        } else {
-            System.out.println("Goodbye");
-        }
+                System.out.println("Total cost: £" + totalCost);
+
+                System.out.println("Press 0 to exit");
+                int userChoice = sc.nextInt();
+                if (userChoice == 0) {
+                    System.out.println("Goodbye");
+                    break;
+                }
+                else {
+                    totalAreaColour = 0;
+                    costPerL = 0.0;
+                    totalCost = BigDecimal.ZERO;
+                    numberOfCoatings = 0;
+                }
+            }
+        } while (true);
 
 
+    }
+
+    private void numberOfCoatings() {
+
+        System.out.println("Please enter how many coatings you want to apply");
+
+        numberOfCoatings = sc.nextInt();
 
     }
 
     private void enterWallDimensions() {
 
-        System.out.println("What are the wall dimensions that you want to cover?");
-        System.out.println("Enter height");
+        int areaColour;
 
-        height = sc.nextInt();
+        do {
+            System.out.println("What are the wall dimensions that you want to cover?");
+            System.out.println("Enter height");
 
-        System.out.println("Enter width");
+            int height = sc.nextInt();
 
-        width = sc.nextInt();
+            System.out.println("Enter width");
 
-        totalAreaColour = height*width;
+            int width = sc.nextInt();
+            sc.nextLine();
+
+            areaColour = height * width;
+
+            System.out.println("press 1 to add another wall or any other number to exit");
+            int userChoice = sc.nextInt();
+            if (userChoice == 0) {
+                totalAreaColour = areaColour;
+                break;
+            } else {
+                totalAreaColour += areaColour;
+            }
+        } while (true);
 
     }
 
     private void selectColour() {
 
-        System.out.printf("Please enter: \n" +
-                "1 for Red \n" +
-                "2 for Brown \n" +
-                "3 for Black \n"+
-                "0 to exit \n");
+        System.out.print("""
+                Please enter:\s
+                1 for Red\s
+                2 for Brown\s
+                3 for Black\s
+                """);
 
         int selection = sc.nextInt();
 
-        switch (selection){
-            case 1:
-                costPerL = 24.99;
-                break;
-            case 2:
-                costPerL = 25.99;
-                break;
-            case 3:
-                costPerL = 30.99;
-                break;
-            default:
-                costPerL = 0.0;
-                break;
-
+        switch (selection) {
+            case 1 -> costPerL = 24.99;
+            case 2 -> costPerL = 25.99;
+            case 3 -> costPerL = 30.99;
+            default -> costPerL = 0.0;
         }
 
     }
+    
 
-    public void calculateCost(){
+    public void calculateCost() {
 
-        totalCost = totalAreaColour*costPerL;
+        BigDecimal costPerLBD = BigDecimal.valueOf(costPerL);
+        BigDecimal totalAreaColourBD = BigDecimal.valueOf(totalAreaColour);
+        BigDecimal numOfCoatingsBD = BigDecimal.valueOf(numberOfCoatings);
 
-        totalCost = (double) Math.round(totalCost*100)/100;
+        totalCost = costPerLBD.multiply(totalAreaColourBD);
 
+        totalCost = totalCost.multiply(numOfCoatingsBD);
+        totalCost.setScale(2);
     }
-
 
 }
