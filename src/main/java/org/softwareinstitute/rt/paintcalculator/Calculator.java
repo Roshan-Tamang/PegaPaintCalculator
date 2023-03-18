@@ -21,23 +21,45 @@ public class Calculator {
 
     List<Wall> wallList = new ArrayList<>();
 
-    String[][] paintList = {{"Blue", "£29.99"}, {"Green", "£26.99"}, {"Brown", "£25.99"}, {"Red", "£23.99"}, {"Yellow", "£24.99"}, {"Black", "£25.99"}};
+    String[][] paintList = {{"Blue", "£14.99"}, {"Green", "£13.99"}, {"Brown", "£12.99"}, {"Red", "£12.99"}, {"Yellow", "£14.99"}, {"Black", "£12.99"}};
 
     public void run() {
 
+        //House has stairs, doors, stairs
+
+        buildHouse();
 
         selectColour();
+
         selectPaintFinish();
+
         numberOfCoatings();
 
         enterWallDimensions();
 
+        // Labour required to paint the rooms
+
         calculateCost();
 
-        System.out.printf("You have chosen colour " + colourChoice + " with " + finishChoice + " finish" + ". The Total cost is: £" + totalCost);
-
+        System.out.println("You have chosen colour " + colourChoice + " with " + finishChoice + " finish" + ". The Total cost is: £" + totalCost);
 
     }
+
+    private void buildHouse() {
+
+        System.out.println("Select what you are painting: \n" +
+                "Wall(s)\n" +
+                "Stairs\n" +
+                "Door(s)\n" +
+                "Window(s)\n" +
+                "Ceilings\n"+
+                "Floor(s)");
+
+        
+    }
+
+
+
 
     private void selectPaintFinish() {
 
@@ -51,7 +73,6 @@ public class Calculator {
                 4 for Semi-gloss\s
                 5 for High-gloss\s
                 """);
-
 
         do {
             selection = sc.nextInt();
@@ -120,7 +141,7 @@ public class Calculator {
 
             System.out.println("press 1 to add another wall or any other number to exit");
             int userChoice = sc.nextInt();
-            if (userChoice == 0) {
+            if (userChoice != 1) {
                 break;
             }
         } while (true);
@@ -139,9 +160,9 @@ public class Calculator {
 
             colourChoice = sc.nextLine();
 
-            for (int i = 0; i < paintList.length; i++) {
-                if (paintList[i][0].equalsIgnoreCase(colourChoice)) {
-                    extractCost(paintList[i][1]);
+            for (String[] strings : paintList) {
+                if (strings[0].equalsIgnoreCase(colourChoice)) {
+                    extractCost(strings[1]);
                     exit = false;
                 }
             }
@@ -156,7 +177,7 @@ public class Calculator {
 
         price = price.substring(1);
 
-        double paintCostD = Double.valueOf(price);
+        double paintCostD = Double.parseDouble(price);
 
         paintCostBD = BigDecimal.valueOf(paintCostD);
 
