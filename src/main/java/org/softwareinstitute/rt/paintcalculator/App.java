@@ -16,8 +16,10 @@ public class App {
 
             calculator.run();
 
-            System.out.println("To use paint calculator again, press 1");
+            System.out.println("Press 1: Use paint calculator again\n" +
+                    "Press any other key: Exit");
             int userChoice = sc.nextInt();
+            sc.nextLine();
             if(userChoice != 1){
                 break;
             }

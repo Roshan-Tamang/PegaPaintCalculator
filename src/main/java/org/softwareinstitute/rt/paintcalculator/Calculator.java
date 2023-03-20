@@ -11,7 +11,6 @@ import java.util.Scanner;
 
 public class Calculator {
 
-    private String colourChoice;
     private BigDecimal paintCostBD;
     private String finishChoice;
     private double additionalCost;
@@ -35,7 +34,7 @@ public class Calculator {
 
         calculateTotalCost();
 
-        System.out.println("You have chosen colour " + colourChoice + " with " + finishChoice + " finish" + ". The Total cost is: £" + totalCostBD);
+        System.out.println("The Total estimated cost is: £" + totalCostBD);
 
     }
 
@@ -59,7 +58,8 @@ public class Calculator {
 
                 }
             }
-            System.out.println("To add another PaintSurface press 1");
+            System.out.println("Press 1: Add another PaintSurface\n" +
+                    "Press any other key: exit");
             int userChoiceInt = sc.nextInt();
             sc.nextLine();
             if (userChoiceInt != 1) {
@@ -75,20 +75,25 @@ public class Calculator {
         System.out.println("Enter height");
 
         int height = sc.nextInt();
+        //BigDecimal height = sc.nextBigDecimal();
 
         System.out.println("Enter width");
 
         int width = sc.nextInt();
+        //BigDecimal width = sc.nextBigDecimal();
         sc.nextLine();
 
         int totalArea = height * width;
+        //BigDecimal totalArea = height.multiply(width);
 
         int paintArea = totalArea;
+        //  BigDecimal paintArea = totalArea;
 
         System.out.println("Are there are any areas you would like to exclude?");
         do {
             System.out.println("Press 1 for \"Yes\" or 0 for \"No\" ");
             int userChoice = sc.nextInt();
+            sc.nextLine();
             if (userChoice == 1) {
                 paintArea = excludeDimensions(totalArea);
                 System.out.println("Are there any additional areas you would like to exclude?");
@@ -143,6 +148,7 @@ public class Calculator {
 
         boolean exit = true;
 
+        String colourChoice;
         do {
             System.out.println("Please select the colour from the list by entering the name: ");
             for (int i = 0; i < paintList.length; i++) {
@@ -224,6 +230,7 @@ public class Calculator {
         System.out.println("Please enter how many coatings you want to apply");
 
         numberOfCoatings = sc.nextInt();
+        sc.nextLine();
 
     }
 
@@ -242,14 +249,16 @@ public class Calculator {
     public void calculateCost(int paintingArea) {
 
 
+        BigDecimal paintRequired = BigDecimal.valueOf(10);
         BigDecimal totalPaintCostBD = paintCostBD.add(BigDecimal.valueOf(additionalCost));
         BigDecimal paintingAreaBD = BigDecimal.valueOf(paintingArea);
         BigDecimal numOfCoatingsBD = BigDecimal.valueOf(numberOfCoatings);
 
         individualCostBD = totalPaintCostBD.multiply(paintingAreaBD);
+        individualCostBD = individualCostBD.divide(paintRequired);
 
         individualCostBD = individualCostBD.multiply(numOfCoatingsBD);
-        individualCostBD.setScale(2, RoundingMode.HALF_UP);
+        individualCostBD = individualCostBD.setScale(2, RoundingMode.HALF_UP);
     }
 
     private void estimateLabourCost() {
@@ -276,9 +285,9 @@ public class Calculator {
 
     private void calculateTotalCost() {
 
-        totalCostBD  = BigDecimal.ZERO;
+        totalCostBD = BigDecimal.ZERO;
 
-        for(PaintingSurface i : paintingSurfaceList){
+        for (PaintingSurface i : paintingSurfaceList) {
             totalCostBD = totalCostBD.add(i.getCost());
         }
 
